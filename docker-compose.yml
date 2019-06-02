@@ -2,7 +2,7 @@ version: '3'
 
 services:
     localstack:
-        image: localstack/localstack:latest
+        image: localstack/localstack:0.9.4
         ports:
             - "4576:4576"
         environment:
@@ -14,6 +14,8 @@ services:
             - create.py
             - A
             - B
+        depends_on:
+          - localstack
         links:
           - localstack
     worker-a:
@@ -23,6 +25,8 @@ services:
             - increment.py
             - A
             - B
+        depends_on:
+          - init
         links:
           - localstack
     worker-b:
@@ -32,6 +36,7 @@ services:
             - increment.py
             - B
             - A
+        depends_on:
+          - init
         links:
           - localstack
-
