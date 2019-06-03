@@ -14,10 +14,9 @@ read_queue = sqs.get_queue_by_name(QueueName=sys.argv[1])
 write_queue = sqs.get_queue_by_name(QueueName=sys.argv[2])
 
 while True:
-    print('.')
     for message in read_queue.receive_messages():
         number = message.body
-        print(number)
+        print(number, flush=True)
         write_queue.send_message(MessageBody=f'{int(number) + 1}')
         message.delete()
         time.sleep(2)
