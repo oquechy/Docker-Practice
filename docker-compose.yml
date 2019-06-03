@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+    localstack:
+        image: localstack/localstack:0.9.4
+        ports:
+            - "4576:4576"
+        environment:
+            - SERVICES=sqs
+    init:
+        build: .
+        entrypoint:
+            - python3.7
+            - create.py
+            - A
+            - B
+        depends_on:
+          - localstack
+        links:
+          - localstack
+    worker-a:
+        build: .
+        entrypoint:
+            - python3.7
+            - increment.py
+            - A
+            - B
+        depends_on:
+          - init
+        links:
+          - localstack
+    worker-b:
+        build: .
+        entrypoint:
+            - python3.7
+            - increment.py
+            - B
+            - A
+        depends_on:
+          - init
+        links:
+          - localstack
